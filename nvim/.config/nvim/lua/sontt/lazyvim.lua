@@ -87,11 +87,11 @@ require('lazy').setup({
   },
   {
     "catppuccin/nvim",
-    -- name = "catppuccin",
-    -- priority = 1000,
-    -- config = function()
-    --   vim.cmd.colorscheme 'catppuccin'
-    -- end,
+    name = "catppuccin",
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'catppuccin'
+    end,
   },
   -- {
   --   "tanvirtin/monokai.nvim",
@@ -341,10 +341,10 @@ require('lazy').setup({
   { 'akinsho/toggleterm.nvim', version = "*", config = true },
   {
     'morhetz/gruvbox',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'gruvbox'
-    end,
+    -- priority = 1000,
+    -- config = function()
+    --   vim.cmd.colorscheme 'gruvbox'
+    -- end,
   },
   {
     'drewtempelmeyer/palenight.vim',
