@@ -24,6 +24,7 @@ alias lss="~/.local/scripts/tmux_sessionizer"
 alias ls="exa"
 alias ll="exa -alh"
 alias tree="exa --tree"
+alias gs="git status"
 
 export FLUTTER="/Users/sontruong/DevTools/flutter-3.7.10/flutter"
 export ANDROID="/Users/sontruong/Library/Android/sdk"
