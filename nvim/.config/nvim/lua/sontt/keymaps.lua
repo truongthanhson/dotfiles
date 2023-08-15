@@ -69,9 +69,9 @@ vim.keymap.set('n', '<leader>fc', [[<Cmd>lua require('telescope').extensions.flu
   { noremap = true, silent = true })
 
 -- nvim-tree
--- vim.keymap.set('n', '<C-b>', [[:NvimTreeToggle<CR>]], { desc = '[?] Toggle Nvim Tree' })
+vim.keymap.set('n', '<C-b>', [[:NvimTreeToggle<CR>]], { desc = '[?] Toggle Nvim Tree' })
 
-vim.keymap.set('n', '<C-b>', [[:Ex<CR>]], { desc = 'Open Netrw Explorer' })
+-- vim.keymap.set('n', '<C-b>', [[:Ex<CR>]], { desc = 'Open Netrw Explorer' })
 
 -- Harpoon
 vim.keymap.set('n', '<leader><space>', [[:lua require("harpoon.ui").toggle_quick_menu()<CR>]],
