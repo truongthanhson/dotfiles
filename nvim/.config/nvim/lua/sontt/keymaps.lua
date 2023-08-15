@@ -98,3 +98,6 @@ vim.keymap.set('n', '<leader>6', [[:lua require("harpoon.ui").nav_file(6)<CR>]],
 -- scripts
 vim.keymap.set('n', '<F5>', [[:lua RunDart()<CR>]], { noremap = true, desc = 'run current dart file' })
 vim.keymap.set('n', '<F4>', [[:lua RunC()<CR>]], { noremap = true, desc = 'run current cpp file', silent = true })
+vim.keymap.set('n', '<F6>',
+  [[:exec '!g++-13 -std=c++0x -o "%<" "%"' | :vsplit | term "./%<" && rm "./%<"<CR><CR> | :startinsert<CR>]],
+  { noremap = true, desc = 'run current cpp file & wait for input', silent = true })
