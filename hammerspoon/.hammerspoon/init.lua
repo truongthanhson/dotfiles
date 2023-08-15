@@ -4,9 +4,9 @@ obj.current_windows = {}
 obj.theWindows = hs.window.filter.new()
 
 obj.altShortcuts = {
-	{ "1", { "Simulator", "Alacritty" } },
+	{ "1", { "Simulator", "iTerm" } },
 	{ "2", { "Google Chrome" } },
-	{ "3", { "Zalo", "Microsoft Teams", "Slack" } },
+	{ "3", { "Zalo", "Slack" } },
 	{ "4", { "Proxyman", "Simulator" } },
 	{ "5", { "Notion", "Todoist" } },
 	{ "6", { "Preview" } },
