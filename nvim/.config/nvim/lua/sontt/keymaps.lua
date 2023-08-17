@@ -11,7 +11,6 @@ vim.keymap.set("x", "<leader>p", [["_dP]])
 -- next greatest remap ever : asbjornHaland
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
-
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 vim.keymap.set("n", "<C-f>", "<cmd>!tmux neww ~/.local/scripts/tmux_sessionizer<CR>")
@@ -96,8 +95,9 @@ vim.keymap.set('n', '<leader>6', [[:lua require("harpoon.ui").nav_file(6)<CR>]],
   { desc = 'quick navigate to file 6' })
 
 -- scripts
-vim.keymap.set('n', '<F5>', [[:lua RunDart()<CR>]], { noremap = true, desc = 'run current dart file' })
-vim.keymap.set('n', '<F4>', [[:lua RunC()<CR>]], { noremap = true, desc = 'run current cpp file', silent = true })
 vim.keymap.set('n', '<F6>',
   [[:exec '!g++-13 -std=c++0x -o "%<" "%"' | :vsplit | term "./%<" && rm "./%<"<CR><CR> | :startinsert<CR>]],
   { noremap = true, desc = 'run current cpp file & wait for input', silent = true })
+vim.keymap.set({ 'n', 'i' }, '<F5>',
+  [[:vsplit | term dart run "%"<CR> | :startinsert<CR>]],
+  { noremap = true, desc = 'dart run', silent = true })
