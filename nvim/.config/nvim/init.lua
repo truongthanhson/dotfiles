@@ -10,5 +10,3 @@ require("sontt.plugins.treesitter-context")
 require("sontt.plugins.harpoon")
 require("sontt.plugins.lualine")
 
-require("sontt.autocmds.execute_dart")
-require("sontt.autocmds.execute_c_plus_plus")
