@@ -23,5 +23,7 @@ require("flutter-tools").setup {
     on_attach = lsp.on_attach,
   },
 }
+vim.keymap.set('n', '<leader>fc', [[<Cmd>lua require('telescope').extensions.flutter.commands()<CR>]],
+  { noremap = true, silent = true })
 require("telescope").load_extension("flutter")
 return M
