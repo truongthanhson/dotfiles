@@ -232,23 +232,8 @@ require('lazy').setup({
         'sidlatau/neotest-dart',
       },
       config = function()
-        require('neotest').setup({
-          adapters = {
-            require('neotest-dart') {
-              command = 'flutter',
-              use_lsp = true
-            },
-          },
-          -- overseer.nvim
-          consumers = {
-            overseer = require "neotest.consumers.overseer",
-          },
-          overseer = {
-            enabled = true,
-            force_default = true,
-          },
-        })
-      end
+        require("sontt.plugins.neotest").setup()
+      end,
     },
     {
       "stevearc/overseer.nvim",
