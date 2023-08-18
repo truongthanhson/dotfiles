@@ -1,4 +1,5 @@
-local on_attach = function(_, bufnr)
+local M = {}
+M.on_attach = function(_, bufnr)
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -67,7 +68,7 @@ require('neodev').setup()
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+M.capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- auto format on save
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -86,12 +87,16 @@ local mason_lspconfig = require 'mason-lspconfig'
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
+local opts = {
+  on_attach = M.on_attach,
+  capabilities = M.capabilities,
+}
 
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
+      capabilities = opts.capabilities,
+      on_attach = opts.on_attach,
       settings = servers[server_name],
     }
   end,
@@ -100,27 +105,28 @@ mason_lspconfig.setup_handlers {
 require 'lspconfig'.terraformls.setup {}
 require 'lspconfig'.ruby_ls.setup {}
 
-require("flutter-tools").setup {
-  outline = { auto_open = false },
-  decorations = {
-    statusline = { device = true, app_version = true },
-  },
-  widget_guides = { enabled = true, debug = true },
-  dev_log = { enabled = true, open_cmd = "tabedit" },
-  lsp = {
-    color = {
-      enabled = true,
-      background = true,
-      virtual_text = false,
-    },
-    settings = {
-      showTodos = true,
-      renameFilesWithClasses = "prompt",
-      enableSnippets = true,
-      updateImportsOnRename = true,
-    },
-    capabilities = capabilities,
-    on_attach = on_attach,
-  },
-}
-require("telescope").load_extension("flutter")
+-- require("flutter-tools").setup {
+--   outline = { auto_open = false },
+--   decorations = {
+--     statusline = { device = true, app_version = true },
+--   },
+--   widget_guides = { enabled = true, debug = true },
+--   dev_log = { enabled = true, open_cmd = "tabedit" },
+--   lsp = {
+--     color = {
+--       enabled = true,
+--       background = true,
+--       virtual_text = false,
+--     },
+--     settings = {
+--       showTodos = true,
+--       renameFilesWithClasses = "prompt",
+--       enableSnippets = true,
+--       updateImportsOnRename = true,
+--     },
+--     capabilities = capabilities,
+--     on_attach = on_attach,
+--   },
+-- }
+-- require("telescope").load_extension("flutter")
+return M
