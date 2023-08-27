@@ -334,5 +334,8 @@ require('lazy').setup({
   {
     'drewtempelmeyer/palenight.vim',
   },
-
+  {
+    'https://github.com/junegunn/goyo.vim'
+    ,
+  },
 }, {})
