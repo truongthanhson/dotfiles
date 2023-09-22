@@ -1,17 +1,18 @@
 local obj = {}
-
 obj.current_windows = {}
 obj.theWindows = hs.window.filter.new()
 
+hs.window.animationDuration = 0
 obj.altShortcuts = {
-	{ "1", { "Simulator", "Alacritty" } },
+	{ "1", { "Simulator", "iTerm" } },
 	{ "2", { "Google Chrome" } },
 	{ "3", { "Zalo", "Slack" } },
-	{ "4", { "Proxyman", "Simulator" } },
-	{ "5", { "Notion", "Todoist" } },
-	{ "6", { "Preview" } },
+	{ "4", { "Preview" } },
+	{ "5", { "Proxyman", "Simulator" } },
+	{ "6", { "Notion", "Todoist" } },
 	{ "7", { "Google Chrome" } },
 	{ "8", { "Microsoft Teams" } },
+	{ "9", { "Microsoft OneNote" } },
 }
 
 for _, v in ipairs(obj.theWindows:getWindows()) do
@@ -56,15 +57,18 @@ for i, shortcut in ipairs(obj.altShortcuts) do
 				if i == 2 then
 					local work = obj:find_window_by_title('ch_work')
 					if work then
+						hs.window.animationDuration = 0
 						work:focus()
 					end
 				elseif i == 7 then
 					local relax = obj:find_window_by_title("ch_relax")
 					if relax then
+						hs.window.animationDuration = 0
 						relax:focus()
 					end
 				end
 			else
+				hs.window.animationDuration = 0
 				hs.application.launchOrFocus(app)
 			end
 		end
