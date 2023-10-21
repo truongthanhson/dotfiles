@@ -11,7 +11,7 @@ obj.altShortcuts = {
 	{ "5", { "Proxyman", "Simulator" } },
 	{ "6", { "Notion", "Todoist" } },
 	{ "7", { "Google Chrome" } },
-	{ "8", { "Microsoft Teams" } },
+	{ "8", { "Microsoft Teams classic" } },
 	{ "9", { "Microsoft OneNote" } },
 }
 

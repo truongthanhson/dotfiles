@@ -31,10 +31,18 @@ vim.keymap.set('n', '<leader>|', '<C-w>|<CR>', { noremap = true, silent = true }
 
 vim.keymap.set('n', '<C-b>', [[:Ex<CR>]], { desc = 'Open Netrw Explorer' })
 
+-- quickfix list navigate keymap
+vim.keymap.set('n', '<leader>nh', "<cmd>cnext<CR>zz", { desc = "Forward qfixlist" })
+vim.keymap.set('n', '<leader>nq', "<cmd>cprev<CR>zz", { desc = "Backward qfixlist" })
+
+-- shortcut to copy current filename/filepath to clipboard
+vim.keymap.set("n", "<leader>cf", "<cmd>let @+ = expand(\"%\")<CR>", { desc = "Copy File Name" })
+vim.keymap.set("n", "<leader>cp", "<cmd>let @+ = expand(\"%:p\")<CR>", { desc = "Copy File Path" })
+
 
 -- scripts
 vim.keymap.set('n', '<F6>',
-  [[:exec '!g++-13 -std=c++0x -o "%<" "%"' | :vsplit | term "./%<" && rm "./%<"<CR><CR> | :startinsert<CR>]],
+  [[:exec '!g++-13 -std=c++0x -DLOCAL -o "%<" "%"' | :vsplit | term "./%<" && rm "./%<"<CR><CR> | :startinsert<CR>]],
   { noremap = true, desc = 'run current cpp file & wait for input', silent = true })
 vim.keymap.set({ 'n', 'i' }, '<F5>',
   [[:vsplit | term dart run "%"<CR> | :startinsert<CR>]],
