@@ -38,7 +38,6 @@ export PATH="$PATH":"$HOME/.pub-cache/bin"
 
 
 
-source <(ng completion script)
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
