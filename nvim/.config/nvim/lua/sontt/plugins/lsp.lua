@@ -45,6 +45,7 @@ local servers = {
   terraformls = {},
   tsserver = {},
   bashls = {},
+  rust_analyzer = {},
   lua_ls = {
     Lua = {
       diagnostics = {
@@ -104,6 +105,7 @@ mason_lspconfig.setup_handlers {
 
 require 'lspconfig'.terraformls.setup {}
 require 'lspconfig'.ruby_ls.setup {}
+require 'lspconfig'.rust_analyzer.setup {}
 
 -- require("flutter-tools").setup {
 --   outline = { auto_open = false },
