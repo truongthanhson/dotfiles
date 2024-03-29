@@ -1,0 +1,9 @@
+[font]
+size = 16
+
+[font.normal]
+family = "ComicShannsMono Nerd Font"
+style = "Regular"
+
+[window]
+opacity = 0.9
