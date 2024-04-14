@@ -209,6 +209,7 @@ exec_always nitrogen --restore
 # start chrome with keyring
 bindsym $mod+c exec google-chrome-stable --password-store=gnome-libsecret
 bindsym $mod+b exec slack --password-store=gnome-libsecret
+bindsym $mod+n exec nautilus
 
 # bar {
 # 	font pango:Cousine Nerd Font 10
