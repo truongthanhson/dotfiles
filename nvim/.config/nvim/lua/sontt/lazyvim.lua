@@ -65,16 +65,16 @@ require('lazy').setup({
   {
     'rose-pine/neovim',
     name = 'rose-pine',
-    -- priority = 1000,
-    -- config = function()
-    --   vim.cmd.colorscheme 'rose-pine'
-    -- end,
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'rose-pine'
+    end,
   },
   {
-    'cocopon/iceberg.vim',
-    -- priority = 1000,
+    'folke/tokyonight.nvim',
+    priority = 1000,
     -- config = function()
-    --   vim.cmd.colorscheme 'iceberg'
+    --   vim.cmd.colorscheme 'tokyonight'
     -- end,
   },
   {
@@ -87,11 +87,11 @@ require('lazy').setup({
   },
   {
     "catppuccin/nvim",
-    name = "catppuccin",
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'catppuccin-frappe'
-    end,
+    -- name = "catppuccin",
+    -- priority = 1000,
+    -- config = function()
+    --   vim.cmd.colorscheme 'catppuccin-frappe'
+    -- end,
   },
   -- {
   --   "tanvirtin/monokai.nvim",
@@ -335,7 +335,16 @@ require('lazy').setup({
     'drewtempelmeyer/palenight.vim',
   },
   {
-    'https://github.com/junegunn/goyo.vim'
-    ,
+    'https://github.com/junegunn/goyo.vim',
+  },
+  {
+    'rust-lang/rust.vim',
+    ft = "rust",
+    init = function()
+      vim.g.rustfmt_autosave = 1
+    end
+  },
+  {
+    'simrat39/rust-tools.nvim',
   },
 }, {})
