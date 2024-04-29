@@ -114,16 +114,16 @@ require('lazy').setup({
     -- },
   },
 
-  {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
-  },
+  -- {
+  --   -- Add indentation guides even on blank lines
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   -- Enable `lukas-reineke/indent-blankline.nvim`
+  --   -- See `:help indent_blankline.txt`
+  --   opts = {
+  --     char = '┊',
+  --     show_trailing_blankline_indent = false,
+  --   },
+  -- },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim',         opts = {} },
@@ -160,80 +160,6 @@ require('lazy').setup({
     -- TSPlayground
     {
       'nvim-treesitter/playground'
-    },
-    {
-      "nvim-neotest/neotest",
-      keys = {
-        {
-          "<leader>tNF",
-          "<cmd>lua require('neotest').run.run({vim.fn.expand('%'), strategy = 'dap'})<cr>",
-          desc =
-          "Debug File"
-        },
-        {
-          "<leader>tNL",
-          "<cmd>lua require('neotest').run.run_last({strategy = 'dap'})<cr>",
-          desc =
-          "Debug Last"
-        },
-        {
-          "<leader>tNa",
-          "<cmd>lua require('neotest').run.attach()<cr>",
-          desc =
-          "Attach"
-        },
-        {
-          "<leader>tNf",
-          "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<cr>",
-          desc =
-          "File"
-        },
-        {
-          "<leader>tNl",
-          "<cmd>lua require('neotest').run.run_last()<cr>",
-          desc =
-          "Last"
-        },
-        {
-          "<leader>tNn",
-          "<cmd>lua require('neotest').run.run()<cr>",
-          desc =
-          "Nearest"
-        },
-        {
-          "<leader>tNN",
-          "<cmd>lua require('neotest').run.run({strategy = 'dap'})<cr>",
-          desc =
-          "Debug Nearest"
-        },
-        {
-          "<leader>tNo",
-          "<cmd>lua require('neotest').output.open({ enter = true })<cr>",
-          desc =
-          "Output"
-        },
-        {
-          "<leader>tNs",
-          "<cmd>lua require('neotest').run.stop()<cr>",
-          desc =
-          "Stop"
-        },
-        {
-          "<leader>tNS",
-          "<cmd>lua require('neotest').summary.toggle()<cr>",
-          desc =
-          "Summary"
-        },
-      },
-      dependencies = {
-        "nvim-lua/plenary.nvim",
-        "nvim-treesitter/nvim-treesitter",
-        "antoinemadec/FixCursorHold.nvim",
-        'sidlatau/neotest-dart',
-      },
-      config = function()
-        require("sontt.plugins.neotest").setup()
-      end,
     },
     {
       "stevearc/overseer.nvim",
@@ -291,9 +217,9 @@ require('lazy').setup({
   {
     'nvim-tree/nvim-web-devicons'
   },
-  -- {
-  --   'xiyaowong/transparent.nvim'
-  -- },
+  {
+    'xiyaowong/transparent.nvim'
+  },
   {
     'mbbill/undotree'
   },
@@ -346,5 +272,45 @@ require('lazy').setup({
   },
   {
     'simrat39/rust-tools.nvim',
+  },
+  {
+    "epwalsh/obsidian.nvim",
+    version = "*", -- recommended, use latest release instead of latest commit
+    lazy = true,
+    ft = "markdown",
+    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+    -- event = {
+    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
+    --   "BufReadPre path/to/my-vault/**.md",
+    --   "BufNewFile path/to/my-vault/**.md",
+    -- },
+    dependencies = {
+      -- Required.
+      "nvim-lua/plenary.nvim",
+
+      -- see below for full list of optional dependencies 👇
+    },
+    opts = {
+      workspaces = {
+        {
+          name = "Work",
+          path = "~/Documents/MyNotes",
+        },
+      },
+      -- see below for full list of options 👇
+    },
+  },
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+  },
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = { "nvim-tree/nvim-web-devicons" },
   },
 }, {})

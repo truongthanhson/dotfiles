@@ -106,6 +106,7 @@ mason_lspconfig.setup_handlers {
 
 require 'lspconfig'.terraformls.setup {}
 require 'lspconfig'.ruby_ls.setup {}
+require 'lspconfig'.rust_analyzer.setup {}
 
 
 require 'lspconfig'.rust_analyzer.setup {
