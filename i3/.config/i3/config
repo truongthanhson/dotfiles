@@ -204,7 +204,7 @@ mode "exit: [l]ogout, [r]eboot, [s]hutdown, sus[p]end" {
 exec --no-startup-id picom -CGb
 bindsym $mod+x mode "exit: [l]ogout, [r]eboot, [s]hutdown, sus[p]end"
 # exec nitrogen for wallpaper
-exec_always nitrogen --set-zoom-fill --random ~/Pictures
+exec_always nitrogen --set-zoom --random ~/Pictures
 # change keyboard rate higher
 exec_always xset r rate 240 40
 # start chrome with keyring
