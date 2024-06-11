@@ -105,9 +105,24 @@ mason_lspconfig.setup_handlers {
 }
 
 require 'lspconfig'.terraformls.setup {}
-require 'lspconfig'.ruby_ls.setup {}
+require 'lspconfig'.ruby_lsp.setup {}
 require 'lspconfig'.rust_analyzer.setup {}
+require 'lspconfig'.clangd.setup {
 
+  on_attach = M.on_attach,
+  capabilities = M.capabilities,
+  filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+  root_dir = require 'lspconfig'.util.root_pattern(
+    '.clangd'
+    , '.clang-tidy'
+    , '.clang-format'
+    , 'compile_commands.json'
+    , 'compile_flags.txt'
+    , 'configure.ac'
+    , '.git'
+  ),
+  single_file_support = true,
+}
 
 require 'lspconfig'.rust_analyzer.setup {
   require("rust-tools").setup {}

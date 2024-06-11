@@ -44,6 +44,22 @@ require("obsidian").setup({
       ObsidianHighlightText = { bg = "#75662e" },
     },
   },
+
+  -- Optional, customize how note file names are generated given the ID, target directory, and title.
+  ---@param spec { id: string, dir: obsidian.Path, title: string|? }
+  ---@return string|obsidian.Path The full path to the new note.
+  note_path_func = function(spec)
+    -- This is equivalent to the default behavior.
+    local new_title = spec.title or spec.id
+    local path = spec.dir / tostring(new_title)
+    return path:with_suffix(".md")
+  end,
+
+  templates = {
+    subdir = "06-templates",
+    date_format = "%Y-%m-%d",
+    time_format = "%H:%M",
+  },
 })
 vim.keymap.set("n", "gf", function()
   if require("obsidian").util.cursor_on_markdown_link() then
@@ -55,3 +71,4 @@ end, { noremap = false, expr = true })
 
 vim.keymap.set('n', '<leader>sn', [[:ObsidianSearch<CR>]], { desc = 'Search my notes' })
 vim.keymap.set('n', '<leader>nn', [[:ObsidianNew<CR>]], { desc = 'Create new note' })
+vim.keymap.set('n', '<leader>nt', [[:ObsidianTemplate<CR>]], { desc = 'Create new note from template' })
