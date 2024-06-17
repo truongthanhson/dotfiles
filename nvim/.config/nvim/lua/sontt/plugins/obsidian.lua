@@ -60,6 +60,20 @@ require("obsidian").setup({
     date_format = "%Y-%m-%d",
     time_format = "%H:%M",
   },
+
+  daily_notes = {
+    folder = "07-daily-notes/2024/06-June/",
+    -- Optional, if you want to change the date format for the ID of daily notes.
+    date_format = "%Y-%m-%d-%A",
+    -- Optional, if you want to change the date format of the default alias of daily notes.
+    alias_format = "%B %-d, %Y",
+    -- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
+    template = "daily-note.md"
+  },
+
+  follow_url_func = function(url)
+    vim.fn.jobstart({ "xdg-open", url })
+  end,
 })
 vim.keymap.set("n", "gf", function()
   if require("obsidian").util.cursor_on_markdown_link() then
@@ -72,3 +86,4 @@ end, { noremap = false, expr = true })
 vim.keymap.set('n', '<leader>sn', [[:ObsidianSearch<CR>]], { desc = 'Search my notes' })
 vim.keymap.set('n', '<leader>nn', [[:ObsidianNew<CR>]], { desc = 'Create new note' })
 vim.keymap.set('n', '<leader>nt', [[:ObsidianTemplate<CR>]], { desc = 'Create new note from template' })
+vim.keymap.set('n', '<leader>dl', [[:ObsidianToday<CR>]], { desc = 'Open My daily note' })
