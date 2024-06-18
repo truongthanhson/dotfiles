@@ -8,21 +8,19 @@ obj.altShortcuts = {
 	{ "2", { "Google Chrome" } },
 	{ "3", { "Zalo", "Slack" } },
 	{ "4", { "Preview" } },
-	{ "5", { "Proxyman", "Simulator" } },
+	{ "5", { "Obsidian" } },
 	{ "6", { "Notion", "Todoist" } },
-	{ "7", { "Google Chrome" } },
+	{ "7", { "Brave Browser" } },
 	{ "8", { "Microsoft Teams classic" } },
 	{ "9", { "Microsoft OneNote" } },
 }
 
 for _, v in ipairs(obj.theWindows:getWindows()) do
-	print(v)
 	table.insert(obj.current_windows, v)
 end
 
 function obj:find_window_by_title(t)
 	-- find a window by title.
-	print(t)
 	if not t then
 		hs.alert.show("No string provided to focus_by_title")
 		return nil
@@ -98,4 +96,53 @@ end
 -- 		end
 -- 	end)
 -- end
+config = {}
+config.applications = {
+	['Alfred'] = {
+		bundleID = 'com.runningwithcrayons.Alfred',
+		local_bindings = { 'c', 'space', 'o' }
+	},
+	['Brave'] = {
+		bundleID = 'com.brave.browser',
+		hyper_key = 'k',
+		preferred_display = 1
+	},
+	['Finder'] = {
+		bundleID = 'com.apple.finder',
+		hyper_key = 'f'
+	},
+}
+
+config.domains = {
+	['twitter.com'] = {
+		url = 'twitter.com',
+		tags = { '#distraction', '#socialmedia' }
+	},
+	['instagram.com'] = {
+		url = 'instagram.com',
+		tags = { '#distraction', '#socialmedia' }
+	},
+	['reddit.com'] = {
+		url = 'reddit.com',
+		tags = { '#distraction' }
+	},
+	['instapaper.com'] = {
+		url = 'instapaper.com',
+		tags = { '#distraction', '#reading' }
+	},
+	['youtube.com'] = {
+		url = 'youtube.com',
+		tags = { '#distraction' }
+	}
+}
+
+-- configure spaces for headspace
+config.spaces = {}
+config.setup = {}
+
+hyper = require('hyper')
+hyper.start(config)
+
+movewindows = require('movewindows')
+movewindows.start()
 return obj
