@@ -43,7 +43,6 @@ local servers = {
   kotlin_language_server = {},
   yamlls = {},
   terraformls = {},
-  tsserver = {},
   bashls = {},
   rust_analyzer = {},
   lua_ls = {
@@ -103,10 +102,44 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
-
+require("lspconfig").yamlls.setup {
+  settings = {
+    yaml = {
+      schemas = {
+        kubernetes = "k8s-*.yaml",
+        ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
+        ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+        ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/**/*.{yml,yaml}",
+        ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
+        ["http://json.schemastore.org/kustomization"] = "kustomization.{yml,yaml}",
+        ["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
+        ["http://json.schemastore.org/circleciconfig"] = ".circleci/**/*.{yml,yaml}",
+      },
+    },
+  },
+}
 require 'lspconfig'.terraformls.setup {}
-require 'lspconfig'.ruby_lsp.setup {}
 require 'lspconfig'.rust_analyzer.setup {}
+require 'lspconfig'.solargraph.setup {}
+require 'lspconfig'.solargraph.setup {
+  -- cmd = { os.getenv( "HOME" ) .. "/.rvm/shims/solargraph", 'stdio' },
+  cmd = { os.getenv("HOME") .. "/.rvm/gems/ruby-2.7.6/bin/solargraph", 'stdio' },
+  root_dir = require 'lspconfig'.util.root_pattern("Gemfile", ".git", "."),
+  on_attach = M.on_attach,
+  capabilities = M.capabilities,
+  settings = {
+    solargraph = {
+      autoformat = false,
+      formatting = false,
+      completion = true,
+      diagnostic = true,
+      folding = true,
+      references = true,
+      rename = true,
+      symbols = true
+    }
+  }
+}
 require 'lspconfig'.clangd.setup {
 
   on_attach = M.on_attach,

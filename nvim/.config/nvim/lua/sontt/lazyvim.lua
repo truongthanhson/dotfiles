@@ -295,7 +295,7 @@ require('lazy').setup({
       workspaces = {
         {
           name = "Work",
-          path = "~/Documents/MyNotes",
+          path = "~/Documents/my-notes",
         },
       },
       -- see below for full list of options 👇
@@ -313,4 +313,36 @@ require('lazy').setup({
     -- Optional dependencies
     dependencies = { "nvim-tree/nvim-web-devicons" },
   },
+  {
+    "robitx/gp.nvim",
+    config = function()
+      local conf = {
+        openai_api_key =
+        "",
+        agents = {
+          {
+            name = "ChatGPT4o",
+            chat = true,
+            command = false,
+            -- string with model name or table with model name and parameters
+            model = { model = "gpt-4o", temperature = 1.1, top_p = 1 },
+            -- system prompt (use this to specify the persona/role of the AI)
+            system_prompt = require("gp.defaults").chat_system_prompt,
+            disable = true,
+          },
+          {
+            provider = "openai",
+            name = "ChatGPT4o-mini",
+            chat = true,
+            command = false,
+            -- string with model name or table with model name and parameters
+            model = { model = "gpt-4o-mini", temperature = 1.1, top_p = 1 },
+            -- system prompt (use this to specify the persona/role of the AI)
+            system_prompt = require("gp.defaults").chat_system_prompt,
+          },
+        },
+      }
+      require("gp").setup(conf)
+    end,
+  }
 }, {})

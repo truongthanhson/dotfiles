@@ -47,3 +47,7 @@ vim.keymap.set('n', '<F6>',
 vim.keymap.set({ 'n', 'i' }, '<F5>',
   [[:vsplit | term dart run "%"<CR> | :startinsert<CR>]],
   { noremap = true, desc = 'dart run', silent = true })
+
+-- Helpers
+vim.api.nvim_buf_set_keymap(0, "n", "<leader>yt", ":YAMLTelescope<CR>", { noremap = false })
+vim.api.nvim_buf_set_keymap(0, "n", "<leader>yl", ":!yamllint %<CR>", { noremap = true, silent = true })
