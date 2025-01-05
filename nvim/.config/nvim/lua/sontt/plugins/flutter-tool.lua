@@ -25,5 +25,7 @@ require("flutter-tools").setup {
 }
 vim.keymap.set('n', '<leader>fc', [[<Cmd>lua require('telescope').extensions.flutter.commands()<CR>]],
   { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>fl', [[<Cmd>FlutterLogClear<CR>]],
+  { noremap = true, desc = "Open Flutter log and clear" })
 require("telescope").load_extension("flutter")
 return M
