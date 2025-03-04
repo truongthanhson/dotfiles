@@ -1,3 +1,58 @@
+require("gp").setup({
+  providers = {
+    openai = {
+      endpoint = "https://api.openai.com/v1/chat/completions",
+      secret = os.getenv("OPENAI_API_KEY"),
+    },
+
+    googleai = {
+      endpoint =
+      "https://generativelanguage.googleapis.com/v1beta/models/{{model}}:streamGenerateContent?key={{secret}}",
+      model = "gemini-2.0-flash",
+      secret = os.getenv("GOOGLEAI_API_KEY"),
+    },
+    anthropic = {
+      endpoint = "https://api.anthropic.com/v1/messages",
+      secret = os.getenv("ANTHROPIC_API_KEY"),
+    },
+  },
+  agents = {
+    {
+      name = "ChatGPT4o",
+      chat = true,
+      command = false,
+      -- string with model name or table with model name and parameters
+      model = { model = "gpt-4o", temperature = 1.1, top_p = 1 },
+      -- system prompt (use this to specify the persona/role of the AI)
+      system_prompt = require("gp.defaults").chat_system_prompt,
+      disable = true,
+    },
+    {
+      provider = "openai",
+      name = "ChatGPT4o-mini",
+      chat = true,
+      command = false,
+      model = { model = "gpt-4o-mini", temperature = 1.1, top_p = 1 },
+      system_prompt = require("gp.defaults").chat_system_prompt,
+    },
+    {
+      provider = "googleai",
+      name = "gemini-2.0-flash",
+      chat = true,
+      command = false,
+      model = { model = "gemini-2.0-flash", temperature = 1.1, top_p = 1 },
+      system_prompt = require("gp.defaults").chat_system_prompt,
+    },
+    {
+      provider = "anthropic",
+      name = "claude-3-7-sonnet-20250219",
+      chat = true,
+      command = false,
+      model = { model = "claude-3-7-sonnet-20250219", temperature = 1, top_p = 1 },
+      system_prompt = require("gp.defaults").chat_system_prompt,
+    },
+  },
+})
 require("which-key").add({
   -- VISUAL mode mappings
   -- s, x, v modes are handled the same way by which_key
@@ -106,3 +161,5 @@ require("which-key").add({
     { "<C-g>x",     "<cmd>GpContext<cr>",          desc = "Toggle GpContext" },
   },
 })
+
+return M
