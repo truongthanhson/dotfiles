@@ -2,8 +2,9 @@
 size = 16
 
 [font.normal]
-family = "ComicShannsMono Nerd Font"
+family = "FiraCode Nerd Font"
 style = "Regular"
 
 [window]
-opacity = 0.9
+#opacity = 0.9
+decorations = "Buttonless"

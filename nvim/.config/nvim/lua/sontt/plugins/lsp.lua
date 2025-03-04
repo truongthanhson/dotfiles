@@ -38,12 +38,9 @@ end
 
 local servers = {
   clangd = {},
-  gopls = {},
-  pyright = {},
   kotlin_language_server = {},
-  yamlls = {},
+  gopls = {},
   terraformls = {},
-  bashls = {},
   rust_analyzer = {},
   lua_ls = {
     Lua = {

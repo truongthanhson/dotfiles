@@ -4,15 +4,11 @@ obj.theWindows = hs.window.filter.new()
 
 hs.window.animationDuration = 0
 obj.altShortcuts = {
-	{ "1", { "Simulator", "iTerm" } },
-	{ "2", { "Google Chrome" } },
+	{ "1", { "qemu-system-aarch64", "Alacritty" } },
+	{ "2", { "Firefox" } },
 	{ "3", { "Zalo", "Slack" } },
-	{ "4", { "Preview" } },
-	{ "5", { "Obsidian" } },
-	{ "6", { "Notion", "Todoist" } },
-	{ "7", { "Brave Browser" } },
-	{ "8", { "Microsoft Teams classic" } },
-	{ "9", { "Microsoft OneNote" } },
+	{ "4", { "Obsidian", "Todoist" } },
+	{ "5", { "Proxyman" } },
 }
 
 for _, v in ipairs(obj.theWindows:getWindows()) do

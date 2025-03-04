@@ -44,6 +44,10 @@ vim.keymap.set("n", "<leader>cp", "<cmd>let @+ = expand(\"%:p\")<CR>", { desc = 
 vim.keymap.set('n', '<F6>',
   [[:exec '!g++ -std=c++17 -DLOCAL -o "out" "%"' | :vsplit | term "./out" && rm "./out"<CR><CR> | :startinsert<CR>]],
   { noremap = true, desc = 'run current cpp file & wait for input', silent = true })
+-- for linux
+--   [[:exec '!g++ -std=c++0x -DLOCAL -o "%<" "%"' | :vsplit | term "./%<" && rm "./%<"<CR><CR> | :startinsert<CR>]],
+--  { noremap = true, desc = 'run current cpp file & wait for input', silent = true })
+
 vim.keymap.set({ 'n', 'i' }, '<F5>',
   [[:vsplit | term dart run "%"<CR> | :startinsert<CR>]],
   { noremap = true, desc = 'dart run', silent = true })
