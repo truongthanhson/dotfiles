@@ -15,6 +15,9 @@ require("flutter-tools").setup {
     },
     settings = {
       showTodos = true,
+      analysisExcludedFolders = {
+        vim.fn.expand("$HOME/.pub-cache/"),
+      },
       renameFilesWithClasses = "prompt",
       enableSnippets = true,
       updateImportsOnRename = true,
