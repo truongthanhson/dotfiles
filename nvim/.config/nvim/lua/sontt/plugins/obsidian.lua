@@ -2,7 +2,7 @@ require("obsidian").setup({
   workspaces = {
     {
       name = "Work",
-      path = "~/Documents/MyNotes/my-notes",
+      path = "~/Documents/my-notes",
     },
   },
   ui = {
@@ -72,7 +72,8 @@ require("obsidian").setup({
   },
 
   follow_url_func = function(url)
-    vim.fn.jobstart({ "xdg-open", url })
+    vim.fn.jobstart({ "open", url }) -- Mac OS
+    -- vim.fn.jobstart({"xdg-open", url})  -- linux
   end,
 })
 vim.keymap.set("n", "gf", function()
