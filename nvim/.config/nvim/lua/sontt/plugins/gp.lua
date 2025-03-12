@@ -1,4 +1,5 @@
 require("gp").setup({
+  chat_dir = vim.fn.expand("~/SynologyDrive/AI Chats"),
   providers = {
     openai = {
       endpoint = "https://api.openai.com/v1/chat/completions",
