@@ -29,7 +29,7 @@ require("which-key").add({
     remap = false,
   },
   {
-    "<leader>dt",
+    "<F2>",
     function()
       require("dap").toggle_breakpoint()
     end,
@@ -38,7 +38,7 @@ require("which-key").add({
     remap = false,
   },
   {
-    "<leader>dc",
+    "<F5>",
     function()
       require("dap").continue()
     end,
@@ -47,7 +47,7 @@ require("which-key").add({
     remap = false,
   },
   {
-    "<leader>di",
+    "<F11>",
     function()
       require("dap").step_into()
     end,
@@ -56,7 +56,7 @@ require("which-key").add({
     remap = false,
   },
   {
-    "<leader>do",
+    "<F10>",
     function()
       require("dap").step_over()
     end,
@@ -65,7 +65,7 @@ require("which-key").add({
     remap = false,
   },
   {
-    "<leader>du",
+    "<F12>",
     function()
       require("dap").step_out()
     end,
