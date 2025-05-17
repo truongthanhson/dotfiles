@@ -7,6 +7,10 @@ require("flutter-tools").setup {
   },
   widget_guides = { enabled = true, debug = true },
   dev_log = { enabled = true, open_cmd = "tabedit" },
+  debugger = { -- integrate with nvim dap + install dart code debugger
+    enabled = true,
+    evaluate_to_string_in_debug_views = true,
+  },
   lsp = {
     color = {
       enabled = true,

@@ -215,8 +215,9 @@ require('lazy').setup({
       'stevearc/dressing.nvim', -- optional for vim.ui.select
     },
   },
-  { 'mfussenegger/nvim-dap' },
-  { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
+  { 'mfussenegger/nvim-dap',
+  },
+  { "rcarriga/nvim-dap-ui",    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
   {
     'dart-lang/dart-vim-plugin',
   },
@@ -261,7 +262,7 @@ require('lazy').setup({
   --     require("copilot_cmp").setup()
   --   end
   -- },
-  { 'akinsho/toggleterm.nvim', version = "*", config = true },
+  { 'akinsho/toggleterm.nvim', version = "*",                                                      config = true },
   {
     'morhetz/gruvbox',
     -- priority = 1000,
