@@ -1,0 +1,13 @@
+export FLUTTER=$HOME/devtools/flutter
+#export NVIM_HOME=/home/sontruong/Documents/dev-tools/nvim
+export ANDROID_HOME=$HOME/Library/Android/sdk
+#export JAVA_HOME=/usr/lib/jvm/jdk-21-oracle-x64
+export GOLANG_HOME=~/go
+export PATH=$FLUTTER/bin:$PATH
+#export PATH=$NVIM_HOME/usr/bin:$PATH
+export PATH=$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH
+#export PATH=$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$PATH
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+export PATH=$PATH:$GOLANG_HOME/bin
+export PATH=$PATH:/opt/nvim-linux64/bin
+export PATH=$PATH:~/.local/scripts
