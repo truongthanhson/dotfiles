@@ -18,5 +18,6 @@ source $ZSH/oh-my-zsh.sh
 source ~/config/shell/envars.sh
 source ~/config/shell/alias.sh
 source ~/config/shell/functions.sh
+source ~/config/shell/secrets.sh
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
