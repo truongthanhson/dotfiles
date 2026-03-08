@@ -167,10 +167,6 @@ require('lazy').setup({
     {
       'nvim-treesitter/nvim-treesitter-context'
     },
-    -- TSPlayground
-    {
-      'nvim-treesitter/playground'
-    },
     {
       "stevearc/overseer.nvim",
       keys = {
@@ -284,7 +280,9 @@ require('lazy').setup({
     end
   },
   {
-    'simrat39/rust-tools.nvim',
+    'mrcjkb/rustaceanvim',
+    version = '^5',
+    lazy = false,
   },
   {
     "epwalsh/obsidian.nvim",
@@ -308,7 +306,7 @@ require('lazy').setup({
       workspaces = {
         {
           name = "Work",
-          path = "~/Documents/my-notes",
+          path = "/mnt/c/Users/thanh/Documents/my-notes",
         },
       },
       -- see below for full list of options 👇
