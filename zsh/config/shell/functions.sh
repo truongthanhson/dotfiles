@@ -42,3 +42,48 @@ function gunwipall() {
     git reset $_commit || return 1
   fi
 }
+ticket() {
+  local id="$1"          # e.g. SAKANI-41100
+  local desc="$2"        # e.g. fix-map-filter-persistence
+  local vault="$HOME/vault"
+  local filename="${id}-${desc}.md"
+  local filepath="$vault/00-Projects/Sakani/$filename"
+  local date=$(date +%Y-%m-%d)
+  local year=$(date +%Y)
+
+  # Create note with pre-filled frontmatter
+  cat > "$filepath" << EOF
+---
+id: $(date +%s)
+aliases:
+  - ${id}-${desc}
+tags:
+  - sakani
+  - ticket
+ticket: https://jira.nhc.sa/browse/${id}
+mr:
+figma:
+status: in-progress
+sprint: "${year}-S"
+created: ${date}
+closed:
+---
+# ${id} ${desc}
+
+## Understanding
+
+## Implementation Plan
+
+- [ ]
+
+## Decisions & Context
+
+## Test Accounts / Environments
+
+## References
+
+- Jira: https://jira.nhc.sa/browse/${id}
+EOF
+
+  echo "Created: $filepath"
+}
