@@ -155,39 +155,31 @@ require('lazy').setup({
   },
 
   {
-    -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
+    lazy = false,
+    build = ':TSUpdate',
     dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
+      { 'nvim-treesitter/nvim-treesitter-textobjects', branch = 'main' },
     },
-    config = function()
-      pcall(require('nvim-treesitter.install').update { with_sync = true })
-    end,
-    -- Treesitter context
-    {
-      'nvim-treesitter/nvim-treesitter-context'
+  },
+  { 'nvim-treesitter/nvim-treesitter-context' },
+  {
+    "stevearc/overseer.nvim",
+    keys = {
+      { "<leader>toR", "<cmd>OverseerRunCmd<cr>",       desc = "Run Command" },
+      { "<leader>toa", "<cmd>OverseerTaskAction<cr>",   desc = "Task Action" },
+      { "<leader>tob", "<cmd>OverseerBuild<cr>",        desc = "Build" },
+      { "<leader>toc", "<cmd>OverseerClose<cr>",        desc = "Close" },
+      { "<leader>tod", "<cmd>OverseerDeleteBundle<cr>", desc = "Delete Bundle" },
+      { "<leader>tol", "<cmd>OverseerLoadBundle<cr>",   desc = "Load Bundle" },
+      { "<leader>too", "<cmd>OverseerOpen<cr>",         desc = "Open" },
+      { "<leader>toq", "<cmd>OverseerQuickAction<cr>",  desc = "Quick Action" },
+      { "<leader>tor", "<cmd>OverseerRun<cr>",          desc = "Run" },
+      { "<leader>tos", "<cmd>OverseerSaveBundle<cr>",   desc = "Save Bundle" },
+      { "<leader>tot", "<cmd>OverseerToggle<cr>",       desc = "Toggle" },
     },
-    -- TSPlayground
-    {
-      'nvim-treesitter/playground'
-    },
-    {
-      "stevearc/overseer.nvim",
-      keys = {
-        { "<leader>toR", "<cmd>OverseerRunCmd<cr>",       desc = "Run Command" },
-        { "<leader>toa", "<cmd>OverseerTaskAction<cr>",   desc = "Task Action" },
-        { "<leader>tob", "<cmd>OverseerBuild<cr>",        desc = "Build" },
-        { "<leader>toc", "<cmd>OverseerClose<cr>",        desc = "Close" },
-        { "<leader>tod", "<cmd>OverseerDeleteBundle<cr>", desc = "Delete Bundle" },
-        { "<leader>tol", "<cmd>OverseerLoadBundle<cr>",   desc = "Load Bundle" },
-        { "<leader>too", "<cmd>OverseerOpen<cr>",         desc = "Open" },
-        { "<leader>toq", "<cmd>OverseerQuickAction<cr>",  desc = "Quick Action" },
-        { "<leader>tor", "<cmd>OverseerRun<cr>",          desc = "Run" },
-        { "<leader>tos", "<cmd>OverseerSaveBundle<cr>",   desc = "Save Bundle" },
-        { "<leader>tot", "<cmd>OverseerToggle<cr>",       desc = "Toggle" },
-      },
-      config = true,
-    },
+    config = true,
   },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -395,6 +387,30 @@ require('lazy').setup({
         },
         ft = { "markdown", "Avante" },
       },
+      {
+        "coder/claudecode.nvim",
+        dependencies = { "folke/snacks.nvim" },
+        config = true,
+        keys = {
+          { "<leader>a",  nil,                              desc = "AI/Claude Code" },
+          { "<leader>ac", "<cmd>ClaudeCode<cr>",            desc = "Toggle Claude" },
+          { "<leader>af", "<cmd>ClaudeCodeFocus<cr>",       desc = "Focus Claude" },
+          { "<leader>ar", "<cmd>ClaudeCode --resume<cr>",   desc = "Resume Claude" },
+          { "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
+          { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+          { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>",       desc = "Add current buffer" },
+          { "<leader>as", "<cmd>ClaudeCodeSend<cr>",        mode = "v",                  desc = "Send to Claude" },
+          {
+            "<leader>as",
+            "<cmd>ClaudeCodeTreeAdd<cr>",
+            desc = "Add file",
+            ft = { "NvimTree", "neo-tree", "oil", "minifiles", "netrw" },
+          },
+          -- Diff management
+          { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+          { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>",   desc = "Deny diff" },
+        },
+      }
     },
   }
 }, {})
