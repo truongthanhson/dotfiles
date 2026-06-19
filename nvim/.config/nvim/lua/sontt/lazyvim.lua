@@ -65,7 +65,7 @@ require('lazy').setup({
   {
     'rose-pine/neovim',
     name = 'rose-pine',
-    -- priority = 1000,
+    priority = 1000,
     -- config = function()
     --   vim.cmd.colorscheme 'rose-pine'
     -- end,
@@ -88,7 +88,7 @@ require('lazy').setup({
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    priority = 1000,
+    -- priority = 1000,
     config = function()
       vim.cmd.colorscheme 'catppuccin-mocha'
     end,
@@ -306,7 +306,7 @@ require('lazy').setup({
       workspaces = {
         {
           name = "Work",
-          path = "/mnt/c/Users/thanh/Documents/my-notes",
+          path = "~/Documents/my-notes",
         },
       },
       -- see below for full list of options 👇
@@ -330,7 +330,6 @@ require('lazy').setup({
   {
     "yetone/avante.nvim",
     event = "VeryLazy",
-    lazy = false,
     version = false, -- Set this to "*" to always pull the latest release version, or set it to false to update to the latest code changes.
     -- opts = {
     --   default_provider = "anthropic",

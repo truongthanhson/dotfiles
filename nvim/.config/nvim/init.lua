@@ -12,9 +12,16 @@ require("sontt.plugins.lualine")
 require("sontt.plugins.fugitive")
 require("sontt.plugins.obsidian")
 require("sontt.plugins.oil")
-require("sontt.plugins.gp")
-require("sontt.plugins.dapui")
-require("sontt.plugins.nvim-dap")
-require("sontt.plugins.avante")
 -- require("sontt.plugins.noice")
 require("sontt.plugins.telescope-live-grep-args")
+
+-- Defer heavy AI/debug plugin setup off the startup path; runs once the UI is up.
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  callback = function()
+    require("sontt.plugins.dapui")
+    require("sontt.plugins.nvim-dap")
+    require("sontt.plugins.gp")
+    require("sontt.plugins.avante")
+  end,
+})
