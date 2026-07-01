@@ -87,3 +87,67 @@ EOF
 
   echo "Created: $filepath"
 }
+
+# swt - create a Sakani worktree, bootstrap AI context, and cd into it
+# usage: swt <folder-slug> <branch> [--build]
+#   folder-slug : worktree becomes ~/projects/sakani-<folder-slug>
+#   branch      : checked out if it exists (local/remote), else created from origin/master
+#   --build     : also run the melos cold-start (initsds, bootstrap, arcgis install)
+swt() {
+  local main="$HOME/projects/sakani-v4-mobile"
+  local vault="$HOME/vault/03-Resources/AI-Assistants/projects/sakani"
+  local bootstrap="$HOME/projects/ai-dotfiles/scripts/bootstrap-project.sh"
+
+  local build=0
+  local -a pos=()
+  local arg
+  for arg in "$@"; do
+    if [[ "$arg" == "--build" ]]; then
+      build=1
+    else
+      pos+=("$arg")
+    fi
+  done
+
+  if (( ${#pos} < 2 )); then
+    echo "usage: swt <folder-slug> <branch> [--build]" >&2
+    return 1
+  fi
+
+  local slug="${pos[1]}"
+  local branch="${pos[2]}"
+  local wt="$HOME/projects/sakani-${slug}"
+
+  [[ -e "$main/.git" ]] || { echo "swt: main repo not found at $main" >&2; return 1; }
+  [[ -e "$wt" ]] && { echo "swt: $wt already exists" >&2; return 1; }
+
+  echo "==> fetching origin"
+  git -C "$main" fetch origin --quiet || return 1
+
+  echo "==> creating worktree $wt (branch: $branch)"
+  if git -C "$main" show-ref --verify --quiet "refs/heads/$branch" \
+     || git -C "$main" show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+    git -C "$main" worktree add "$wt" "$branch" || return 1
+  else
+    git -C "$main" worktree add -b "$branch" "$wt" origin/master || return 1
+  fi
+
+  echo "==> bootstrapping AI context"
+  "$bootstrap" --vault-dir "$vault" "$wt" || return 1
+
+  if [[ -f "$main/.nvim.lua" ]]; then
+    echo "==> copying .nvim.lua into worktree"
+    cp "$main/.nvim.lua" "$wt/.nvim.lua"
+  fi
+
+  if (( build )); then
+    echo "==> melos cold-start (takes a few minutes; needs gitlab.iwa.fi SSH key loaded)"
+    ( cd "$wt" \
+      && melos run initsds \
+      && melos clean && melos bootstrap \
+      && dart run arcgis_maps install ) || return 1
+  fi
+
+  echo "==> done; entering $wt"
+  cd "$wt"
+}
