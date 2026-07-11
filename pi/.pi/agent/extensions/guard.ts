@@ -16,13 +16,14 @@ import {
   wrapTextWithAnsi,
 } from "@earendil-works/pi-tui";
 
+const gitPushPattern = /\bgit\b[^\n;&|]*\bpush\b/i;
+
 /* ── Dangerous command patterns ── */
 const dangerousPatterns: RegExp[] = [
   /\brm\b[^\n;&|]*(?:-[a-z]*r[a-z]*|--recursive)\b/i,
   /\bsudo\b/i,
   /\b(chmod|chown)\b.*777/i,
-  /\bgit\s+push\b[^\n;&|]*(?:--force|-f\b)/i,
-  /\bgit\s+push\b[^\n;&|]*--force-with-lease\b/i,
+  /\bgit\b[^\n;&|]*\bcommit\b/i,
   /\bgit\s+reset\s+--hard\b/i,
   /\bgit\s+clean\b[^\n;&|]*-[a-z]*[fdx][a-z]*/i,
   /\bgit\s+checkout\b[^\n;&|]*(?:--\s|\.\s*$)/i,
@@ -31,7 +32,6 @@ const dangerousPatterns: RegExp[] = [
   /\bjj\s+abandon\b/i,
   /\bjj\s+op\s+(?:undo|restore)\b/i,
   /\bjj\s+bookmark\s+(?:delete|forget)\b/i,
-  /\bjj\s+git\s+push\b[^\n;&|]*--deleted\b/i,
   /\bdocker\s+(rm|prune|system\s+prune)\b.*(?:-[a-z]*f[a-z]*|--force)/i,
   /(^|[\s;&|])>{1,2}\s*\/dev\/(?:sd[a-z]|nvme\d+n\d+|disk\d+)/i,
   /\bdd\b[^\n;&|]*\bof=\/dev\/(?:sd[a-z]|nvme\d+n\d+|disk\d+)/i,
@@ -168,6 +168,14 @@ export default function (pi: ExtensionAPI) {
     if (event.toolName === "bash") {
       const command = event.input.command;
       if (typeof command !== "string") return undefined;
+      const normalizedCommand = command.replace(/\\\r?\n/g, " ");
+
+      if (gitPushPattern.test(normalizedCommand)) {
+        if (ctx.hasUI) {
+          ctx.ui.notify(`Blocked git push: ${command}`, "warning");
+        }
+        return { block: true, reason: "Git push commands are forbidden" };
+      }
 
       if (mutatesProtectedPath(command)) {
         if (ctx.hasUI) {
@@ -179,7 +187,9 @@ export default function (pi: ExtensionAPI) {
         return { block: true, reason: "Bash command mutates a protected path" };
       }
 
-      const isDangerous = dangerousPatterns.some((p) => p.test(command));
+      const isDangerous = dangerousPatterns.some((p) =>
+        p.test(normalizedCommand),
+      );
 
       if (isDangerous) {
         if (!ctx.hasUI) {
