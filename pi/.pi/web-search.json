@@ -1,0 +1,6 @@
+{
+  "provider": "openai",
+  "workflow": "none",
+  "allowBrowserCookies": true,
+  "chromeProfile": "Default"
+}

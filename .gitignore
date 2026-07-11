@@ -1,1 +1,8 @@
 zsh/config/shell/secrets.sh
+
+# pi: never track secrets or runtime state
+pi/.pi/agent/auth.json
+pi/.pi/agent/trust.json
+pi/.pi/agent/npm/
+pi/.pi/agent/sessions/
+pi/.pi/agent/bin/
