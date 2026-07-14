@@ -1,0 +1,18 @@
+onboarding = false
+
+[theme]
+name = "catppuccin"
+auto_switch = false
+
+[keys]
+# tmux muscle memory (herdr prefix stays ctrl+b; tmux keeps ctrl+a)
+split_vertical = "prefix+|"        # tmux: prefix |  (side-by-side)
+# split_horizontal default is prefix+minus, already matches tmux prefix -
+reload_config = "prefix+r"         # tmux: prefix r
+resize_mode = "prefix+shift+r"     # moved off prefix+r; hjkl resize inside mode
+zoom = "prefix+m"                  # tmux: prefix m
+# vim-tmux-navigator style direct pane nav
+focus_pane_left = "ctrl+h"
+focus_pane_down = "ctrl+j"
+focus_pane_up = "ctrl+k"
+focus_pane_right = "ctrl+l"
