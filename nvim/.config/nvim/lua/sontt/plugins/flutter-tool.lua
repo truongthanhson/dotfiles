@@ -3,14 +3,17 @@ local lsp = require('sontt.plugins.lsp')
 require("flutter-tools").setup {
   outline = { auto_open = false },
   decorations = {
-    statusline = { device = true, app_version = true },
+    -- app_version reads pubspec.yaml via expand('%:p:h'); breaks when the
+    -- active buffer is an oil:// dir buffer (ENOENT oil:/.../pubspec.yaml).
+    statusline = { device = true, app_version = false },
   },
   widget_guides = { enabled = true, debug = true },
   dev_log = { enabled = true, open_cmd = "tabedit" },
   debugger = { -- integrate with nvim dap + install dart code debugger
-    enabled = true,
+    enabled = false,
     evaluate_to_string_in_debug_views = true,
   },
+  -- fvm = true,
   lsp = {
     color = {
       enabled = true,
@@ -21,6 +24,8 @@ require("flutter-tools").setup {
       showTodos = true,
       analysisExcludedFolders = {
         vim.fn.expand("$HOME/.pub-cache/"),
+        vim.fn.expand("$HOME/devtools/flutter/"),
+        vim.fn.expand("$HOME/projects/sakani-v4-mobile/test/"),
       },
       renameFilesWithClasses = "prompt",
       enableSnippets = true,

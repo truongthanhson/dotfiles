@@ -12,11 +12,12 @@ alias ga='git add'
 alias gb='git branch'
 alias gc='git checkout'
 alias gcl='git clone'
+alias gl='git log --oneline --decorate --graph'
 alias gcm='git commit -m'
 alias gf='git fetch'
 alias gp='git pull origin'
 alias gpu='git push origin'
-alias gs='git status'  # 'status' is protected name so using 'stat' instead
+alias gs='git status'
 
 alias -s txt=$EDITOR
 ## open Flutter developement file with $EDITOR (neovim)

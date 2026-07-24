@@ -42,3 +42,5 @@ vim.o.termguicolors = true
 vim.o.exrc = true
 
 vim.o.splitright = true
+
+vim.opt.iskeyword:remove("_") -- Treat underscore as word boundary

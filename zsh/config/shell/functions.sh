@@ -93,6 +93,7 @@ EOF
 #   folder-slug : worktree becomes ~/projects/sakani-<folder-slug>
 #   branch      : checked out if it exists (local/remote), else created from origin/master
 #   --build     : also run the melos cold-start (initsds, bootstrap, arcgis install)
+# copies .nvim.lua and the fvm SDK pin (.fvmrc, .fvm/) from $main since both are gitignored
 swt() {
   local main="$HOME/projects/sakani-v4-mobile"
   local vault="$HOME/vault/03-Resources/AI-Assistants/projects/sakani"
@@ -138,6 +139,12 @@ swt() {
   if [[ -f "$main/.nvim.lua" ]]; then
     echo "==> copying .nvim.lua into worktree"
     cp "$main/.nvim.lua" "$wt/.nvim.lua"
+  fi
+
+  if [[ -f "$main/.fvmrc" ]]; then
+    echo "==> copying fvm SDK pin into worktree"
+    cp "$main/.fvmrc" "$wt/.fvmrc"
+    cp -R "$main/.fvm" "$wt/.fvm"
   fi
 
   if (( build )); then
