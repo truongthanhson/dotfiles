@@ -6,3 +6,16 @@ pi/.pi/agent/trust.json
 pi/.pi/agent/npm/
 pi/.pi/agent/sessions/
 pi/.pi/agent/bin/
+
+# sunshine: never track TLS credentials, runtime state, or logs
+sunshine/.config/sunshine/credentials/
+sunshine/.config/sunshine/*.log
+sunshine/.config/sunshine/sunshine_state.json
+sunshine/.config/sunshine/*.bak
+sunshine/.config/sunshine/*.before-*
+
+# fcitx5: conf/ is generated runtime state; profile + config are the source
+fcitx5/.config/fcitx5/conf/
+
+# throwaway pre-change backups
+*.before-*

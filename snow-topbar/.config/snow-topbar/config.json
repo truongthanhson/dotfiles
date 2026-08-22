@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "transparent": false,
+  "primaryMonitor": "DP-1",
+  "ignoredOutputs": ["HDMI-A-1"],
+  "centerAnchor": "clock",
+  "layout": {
+    "left": ["menu", "workspaces"],
+    "center": ["indicators", "clock"],
+    "right": ["tray", "network", "audio", "power"]
+  }
+}

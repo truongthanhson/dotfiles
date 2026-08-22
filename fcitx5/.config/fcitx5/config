@@ -1,0 +1,10 @@
+[Behavior]
+# Start in English (Bamboo inactive) by default.
+ActiveByDefault=False
+
+[Hotkey]
+# The toggle is dispatched by Hyprland binds (Ctrl+Space / Super+Space) calling
+# `fcitx5-remote -t`. Disable Fcitx5's own trigger keys to avoid double-toggling.
+TriggerKeys=
+AltTriggerKeys=
+EnumerateWithTriggerKeys=False
