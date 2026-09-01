@@ -21,3 +21,9 @@ source ~/config/shell/functions.sh
 source ~/config/shell/secrets.sh
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Added by LM Studio CLI tool (lms)
+export PATH="$PATH:/home/snow/.lmstudio/bin"
+
+# opencode
+export PATH=/home/snow/.opencode/bin:$PATH

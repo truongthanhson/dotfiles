@@ -13,6 +13,8 @@ vim.lsp.config('*', {
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local bufnr = args.buf
+    vim.lsp.document_color.enable(true, { bufnr = bufnr })
+
     local nmap = function(keys, func, desc)
       vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
     end

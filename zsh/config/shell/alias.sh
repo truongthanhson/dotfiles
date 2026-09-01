@@ -1,4 +1,5 @@
 alias vim="nvim"
+alias v="nvim"
 alias zsh="nvim ~/.zshrc"
 alias vimconf="cd ~/.config/nvim && vim ."
 alias tmuxconf="nvim ~/.tmux.conf"

@@ -1,6 +1,7 @@
 local M = {}
 local lsp = require('sontt.plugins.lsp')
 require("flutter-tools").setup {
+  fvm = true,
   outline = { auto_open = false },
   decorations = {
     -- app_version reads pubspec.yaml via expand('%:p:h'); breaks when the
@@ -15,11 +16,6 @@ require("flutter-tools").setup {
   },
   -- fvm = true,
   lsp = {
-    color = {
-      enabled = true,
-      background = true,
-      virtual_text = false,
-    },
     settings = {
       showTodos = true,
       analysisExcludedFolders = {

@@ -12,9 +12,7 @@ case "$action" in
             "$DISPLAY_MODE" --quiet work || true
             exit 1
         fi
-        if ! "$PERF_HELPER" on; then
-            # Preparation is atomic: never leave the desk dark if optional
-            # tuning becomes unavailable or stops swallowing its own errors.
+        if [[ -x "$PERF_HELPER" ]] && ! "$PERF_HELPER" on; then
             "$DISPLAY_MODE" --quiet work || true
             exit 1
         fi
@@ -22,7 +20,7 @@ case "$action" in
     undo)
         # Recovery must run even if the optional performance helper has trouble.
         perf_rc=0
-        "$PERF_HELPER" off || perf_rc=$?
+        [[ ! -x "$PERF_HELPER" ]] || "$PERF_HELPER" off || perf_rc=$?
         work_rc=0
         "$DISPLAY_MODE" --quiet work || work_rc=$?
         ((work_rc == 0)) || exit "$work_rc"
