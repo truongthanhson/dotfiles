@@ -1,4 +1,5 @@
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type { Usage } from "@earendil-works/pi-ai";
+import type { ExtensionAPI, SessionEntry } from "@earendil-works/pi-coding-agent";
 import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -11,8 +12,15 @@ type FooterTheme = {
   fg(c: "accent" | "dim" | "success" | "warning" | "error", t: string): string;
 };
 type ContextUsage = { percent: number | null; tokens?: number | null } | null | undefined;
+type SessionUsage = {
+  input: number;
+  output: number;
+  cacheRead: number;
+  cacheWrite: number;
+  cost: number;
+  turns: number;
+};
 
-let sessionCost = 0;
 let jjLabel = "";
 let ins = 0;
 let del = 0;
@@ -52,6 +60,36 @@ function toK(n: number): string {
   return n >= 1000 ? `${Math.round(n / 1000)}k` : `${n}`;
 }
 
+function addUsage(total: SessionUsage, usage: Usage | undefined): void {
+  if (!usage) return;
+
+  total.input += usage.input;
+  total.output += usage.output;
+  total.cacheRead += usage.cacheRead;
+  total.cacheWrite += usage.cacheWrite;
+  total.cost += usage.cost.total;
+}
+
+function getSessionUsage(entries: readonly SessionEntry[]): SessionUsage {
+  const total: SessionUsage = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, cost: 0, turns: 0 };
+
+  for (const entry of entries) {
+    if (entry.type === "message") {
+      if ("usage" in entry.message) addUsage(total, entry.message.usage);
+      if (entry.message.role === "assistant") total.turns += 1;
+    } else if (entry.type === "compaction" || entry.type === "branch_summary") {
+      addUsage(total, entry.usage);
+    }
+  }
+
+  return total;
+}
+
+function cacheHitRate(usage: SessionUsage): number {
+  const totalInput = usage.input + usage.cacheRead;
+  return totalInput === 0 ? 0 : Math.round((usage.cacheRead / totalInput) * 100);
+}
+
 function buildLeft(cwd: string, vcs: string | null | undefined, model: string, effort: string, t: FooterTheme): string {
   const segs = [t.fg("accent", cwd)];
   if (vcs) {
@@ -62,29 +100,35 @@ function buildLeft(cwd: string, vcs: string | null | undefined, model: string, e
   return " " + segs.join(t.fg("dim", " · "));
 }
 
-function buildRight(usage: ContextUsage, limit: number, cost: number, t: FooterTheme): string {
+function buildRight(usage: ContextUsage, limit: number, session: SessionUsage, t: FooterTheme): string {
   const pct = usage && usage.percent !== null ? Math.round(usage.percent) : 0;
   const tokens = usage?.tokens ?? 0;
   const pctColor = pct < 50 ? "success" : pct < 80 ? "warning" : "error";
   const tok = limit > 0 ? `${toK(tokens)}/${toK(limit)}` : toK(tokens);
-  return (
-    [t.fg("dim", `$${cost.toFixed(2)}`), t.fg("dim", tok), t.fg(pctColor, `${pct}%`)].join(t.fg("dim", " · ")) + " "
-  );
+  const metrics = [
+    `↑${toK(session.input)}`,
+    `↓${toK(session.output)}`,
+    `R${toK(session.cacheRead)}`,
+    `W${toK(session.cacheWrite)}`,
+    `CH${cacheHitRate(session)}%`,
+    `T${session.turns}`,
+    `$${session.cost.toFixed(2)}`,
+  ].map((metric) => t.fg("dim", metric));
+
+  return [...metrics, t.fg("dim", tok), t.fg(pctColor, `${pct}%`)].join(t.fg("dim", " · ")) + " ";
 }
 
 function compose(width: number, left: string, right: string): string {
-  const pad = " ".repeat(Math.max(1, width - visibleWidth(left) - visibleWidth(right)));
-  return truncateToWidth(left + pad + right, width);
+  if (visibleWidth(left) + visibleWidth(right) < width) {
+    return left + " ".repeat(width - visibleWidth(left) - visibleWidth(right)) + right;
+  }
+
+  if (visibleWidth(right) >= width) return truncateToWidth(right, width);
+  return truncateToWidth(left, width - visibleWidth(right) - 1) + " " + right;
 }
 
 export default function (pi: ExtensionAPI) {
   if (process.env.PI_SUBAGENT_CHILD === "1") return;
-
-  pi.on("message_end", async (event) => {
-    if (event.message?.role !== "assistant") return;
-    const c = event.message.usage?.cost;
-    if (c) sessionCost += c.total ?? ((c.input ?? 0) + (c.output ?? 0) + (c.cacheRead ?? 0) + (c.cacheWrite ?? 0));
-  });
 
   pi.on("turn_end", async () => {
     await refresh();
@@ -101,7 +145,6 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("session_start", async (_event, ctx) => {
     repoCwd = ctx.cwd;
-    sessionCost = 0;
     isJj = existsSync(join(ctx.cwd, ".jj"));
     await refresh();
 
@@ -114,7 +157,8 @@ export default function (pi: ExtensionAPI) {
           ctx.model?.contextWindow ?? (usage && usage.percent ? Math.round((usage.tokens ?? 0) / usage.percent * 100) : 0);
         const vcs = isJj ? jjLabel : footerData.getGitBranch();
         const left = buildLeft(basename(ctx.cwd), vcs, ctx.model?.id ?? "no-model", pi.getThinkingLevel(), theme);
-        const right = buildRight(usage, limit, sessionCost, theme);
+        const session = getSessionUsage(ctx.sessionManager.getBranch());
+        const right = buildRight(usage, limit, session, theme);
         return [compose(width, left, right)];
       },
     }));
