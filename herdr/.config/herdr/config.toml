@@ -1,8 +1,20 @@
 onboarding = false
 
 [theme]
-name = "catppuccin"
+name = "kanagawa"
 auto_switch = false
+
+[theme.custom]
+panel_bg = "#1a0514"       # Deep dark aubergine (distinct from Kitty pane)
+surface_dim = "#14030f"    # Unfocused areas
+surface0 = "#3a132e"       # Tab bar
+surface1 = "#561e45"       # Pane dividers & borders
+accent = "#e95420"         # Ubuntu Orange for active focus
+text = "#ffffff"           # Bright white
+subtext0 = "#aea79f"       # Ubuntu Warm Grey
+
+[ui]
+prompt_new_tab_name = false
 
 [keys]
 prefix = "ctrl+a"
