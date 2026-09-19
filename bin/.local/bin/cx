@@ -1,0 +1,208 @@
+#!/usr/bin/env node
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
+
+const home = os.homedir();
+const topbarConfPath = path.join(home, ".config/snow-topbar/config.json");
+const piAuthPath = path.join(home, ".pi/agent/auth.json");
+
+const [cmd, arg1, arg2] = process.argv.slice(2);
+
+function reloadTopbar() {
+  try {
+    const { execSync } = require("child_process");
+    const topbarBin = path.join(home, "projects/topbar/bin/topbar");
+    if (fs.existsSync(topbarBin)) {
+      execSync(`${topbarBin} restart`, { stdio: "ignore" });
+      console.log("Reloaded TopBar");
+    }
+  } catch {}
+}
+
+function syncToPi(srcFile) {
+  const raw = JSON.parse(fs.readFileSync(srcFile, "utf8"));
+  const dest = fs.existsSync(piAuthPath) ? JSON.parse(fs.readFileSync(piAuthPath, "utf8")) : {};
+  dest["openai-codex"] = {
+    type: "oauth",
+    access: raw.tokens?.access_token,
+    refresh: raw.tokens?.refresh_token,
+    expires: Date.now() + 3600 * 1000,
+    accountId: raw.tokens?.account_id
+  };
+  fs.writeFileSync(piAuthPath, JSON.stringify(dest, null, 2), { mode: 0o600 });
+}
+
+function clearPiAuth(accountId) {
+  if (!fs.existsSync(piAuthPath)) return false;
+  try {
+    const dest = JSON.parse(fs.readFileSync(piAuthPath, "utf8"));
+    if (!dest["openai-codex"]) return false;
+    if (accountId && dest["openai-codex"].accountId && dest["openai-codex"].accountId !== accountId) {
+      return false;
+    }
+    delete dest["openai-codex"];
+    fs.writeFileSync(piAuthPath, JSON.stringify(dest, null, 2), { mode: 0o600 });
+    return true;
+  } catch (err) {
+    console.error(`Error updating ${piAuthPath}:`, err.message);
+    return false;
+  }
+}
+
+// 1. ADD NEW ACCOUNT: cx add <name> <path/to/auth.json>
+if (cmd === "add") {
+  if (!arg1 || !arg2) {
+    console.error("Usage: cx add <name> <path/to/auth.json>");
+    process.exit(1);
+  }
+
+  const name = arg1.toLowerCase();
+  const src = path.resolve(arg2.replace(/^~/, home));
+  const targetDir = path.join(home, `.codex-${name}`);
+  const destAuth = path.join(targetDir, "auth.json");
+
+  if (!fs.existsSync(src)) {
+    console.error(`Source file not found: ${src}`);
+    process.exit(1);
+  }
+
+  fs.mkdirSync(targetDir, { recursive: true });
+  fs.copyFileSync(src, destAuth);
+  fs.chmodSync(destAuth, 0o600);
+
+  // Register with snow-topbar / CodexBar
+  if (fs.existsSync(topbarConfPath)) {
+    const conf = JSON.parse(fs.readFileSync(topbarConfPath, "utf8"));
+    conf.codexbar = conf.codexbar || { codexAccounts: [] };
+    const list = conf.codexbar.codexAccounts;
+    if (!list.find(a => a.id === name)) {
+      list.push({ id: name, label: name.charAt(0).toUpperCase() + name.slice(1), home: targetDir });
+      fs.writeFileSync(topbarConfPath, JSON.stringify(conf, null, 2));
+      console.log(`Registered with CodexBar (${topbarConfPath})`);
+      reloadTopbar();
+    }
+  }
+
+  syncToPi(destAuth);
+  console.log(`Added & switched to ~/.codex-${name}`);
+  process.exit(0);
+}
+
+// 2. REMOVE ACCOUNT OR CLEAR ACTIVE CREDENTIAL: cx rm [name], cx remove [name]
+if (["rm", "remove", "delete", "del"].includes(cmd)) {
+  const target = (arg1 || "").toLowerCase();
+
+  // If no target specified or target is "pi" / "current" / "active" -> clear active Pi credential
+  if (!target || target === "pi" || target === "active" || target === "current") {
+    if (clearPiAuth()) {
+      console.log("Cleared active openai-codex credentials from Pi (~/.pi/agent/auth.json)");
+    } else {
+      console.log("No active openai-codex credentials found in Pi (~/.pi/agent/auth.json)");
+    }
+    process.exit(0);
+  }
+
+  const targetDir = target === "main" ? path.join(home, ".codex") : path.join(home, `.codex-${target}`);
+  const targetAuth = path.join(targetDir, "auth.json");
+
+  let targetAccountId = null;
+  if (fs.existsSync(targetAuth)) {
+    try {
+      const raw = JSON.parse(fs.readFileSync(targetAuth, "utf8"));
+      targetAccountId = raw.tokens?.account_id;
+    } catch {}
+  }
+
+  let deleted = false;
+  if (target === "main") {
+    if (fs.existsSync(targetAuth)) {
+      fs.unlinkSync(targetAuth);
+      console.log(`Removed credentials from ${targetAuth}`);
+      deleted = true;
+    }
+  } else {
+    if (fs.existsSync(targetDir)) {
+      fs.rmSync(targetDir, { recursive: true, force: true });
+      console.log(`Removed directory: ${targetDir}`);
+      deleted = true;
+    }
+  }
+
+  let deregistered = false;
+  if (fs.existsSync(topbarConfPath)) {
+    try {
+      const conf = JSON.parse(fs.readFileSync(topbarConfPath, "utf8"));
+      if (conf.codexbar?.codexAccounts) {
+        const prevLen = conf.codexbar.codexAccounts.length;
+        conf.codexbar.codexAccounts = conf.codexbar.codexAccounts.filter(a => a.id !== target);
+        if (conf.codexbar.codexAccounts.length !== prevLen) {
+          fs.writeFileSync(topbarConfPath, JSON.stringify(conf, null, 2));
+          console.log(`Deregistered ${target} from CodexBar (${topbarConfPath})`);
+          deregistered = true;
+          reloadTopbar();
+        }
+      }
+    } catch (err) {
+      console.error(`Failed to update topbar config: ${err.message}`);
+    }
+  }
+
+  if (targetAccountId && clearPiAuth(targetAccountId)) {
+    console.log("Cleared matching openai-codex credentials from Pi (~/.pi/agent/auth.json)");
+  }
+
+  if (!deleted && !deregistered) {
+    console.error(`Account not found: ${target}`);
+    process.exit(1);
+  }
+
+  console.log(`Removed account: ${target}`);
+  process.exit(0);
+}
+
+// 3. CLEAR ACTIVE PI CREDENTIALS: cx clear, cx logout, cx unset
+if (["clear", "logout", "unset"].includes(cmd)) {
+  if (clearPiAuth()) {
+    console.log("Cleared active openai-codex credentials from Pi (~/.pi/agent/auth.json)");
+  } else {
+    console.log("No active openai-codex credentials found in Pi (~/.pi/agent/auth.json)");
+  }
+  process.exit(0);
+}
+
+// 4. LIST ACCOUNTS: cx ls, cx list
+if (cmd === "ls" || cmd === "list") {
+  console.log("CodexBar accounts:");
+  if (fs.existsSync(topbarConfPath)) {
+    const conf = JSON.parse(fs.readFileSync(topbarConfPath, "utf8"));
+    const list = conf.codexbar?.codexAccounts || [];
+    list.forEach(a => console.log(`  - ${a.id} (${a.home})`));
+  }
+  process.exit(0);
+}
+
+// 5. SWITCH EXISTING: cx <name>
+const name = (cmd === "switch" ? arg1 : cmd) || "";
+if (!name || name === "help" || name === "-h" || name === "--help") {
+  console.log(
+    "Usage:\n" +
+    "  cx <name>                   # switch Pi to ~/.codex-<name>\n" +
+    "  cx add <name> <auth.json>   # register new account for CodexBar + Pi\n" +
+    "  cx rm [name]                # remove account (or clear active Pi credential if no name)\n" +
+    "  cx clear                    # remove active Codex credential from Pi\n" +
+    "  cx ls                       # list registered accounts"
+  );
+  process.exit(cmd === "help" || cmd === "-h" || cmd === "--help" ? 0 : 1);
+}
+
+const targetDir = name === "main" ? path.join(home, ".codex") : path.join(home, `.codex-${name}`);
+const targetAuth = path.join(targetDir, "auth.json");
+
+if (!fs.existsSync(targetAuth)) {
+  console.error(`Not found: ${targetAuth}`);
+  process.exit(1);
+}
+
+syncToPi(targetAuth);
+console.log(`Switched Pi to ${name} (${targetAuth})`);
